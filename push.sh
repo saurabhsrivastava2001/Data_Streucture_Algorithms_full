@@ -1,4 +1,4 @@
 git add .
 git branch -M main
-git commit -m " completed the singly"
+git commit -m " stock span problem"
 git push origin main

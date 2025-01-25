@@ -9,6 +9,7 @@ vector<int> stock_span(int arr[], int size){
     for (int i =0;i<size;i++){
         if (s.size()==0){
             v.push_back(i+1);
+            //directly
         }
         else if(s.top().first>arr[i]){
             v.push_back(i-s.top().second);
