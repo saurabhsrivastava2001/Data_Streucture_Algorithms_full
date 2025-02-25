@@ -1,0 +1,41 @@
+//brute force approach of the leetcode potd 14-2-24
+class ProductOfNumbers {
+public:
+    vector<int> nums; 
+    int n;
+    ProductOfNumbers() {
+        nums.clear();
+        n=0;
+    }
+    
+    void add(int num) {
+        nums.push_back(num);
+    }
+    
+    int getProduct(int k) {
+        int prod=1;
+        int n=nums.size();
+
+        for (int i=n-k;i<n;i++){
+            prod*=nums[i];
+        }
+        return prod;
+    }
+};
+
+/**
+ * Your ProductOfNumbers object will be instantiated and called as such:
+ * ProductOfNumbers* obj = new ProductOfNumbers();
+ * obj->add(num);
+ * int param_2 = obj->getProduct(k);
+ */
+
+
+
+//optimal - 
+//to get the product in o(1) also we will store the commulative product in the array(rather than the simple numbers) then in order
+// to get the product of last k items we will do (nums[n-1]/nums[n-k-1]) 
+
+//but if 0 comes we will clear the product (nums ) array and restart the array if nums is empty then just add num else add the product of the nums[i] and [nums[i-1])
+// and if k is greater than n we'll understand that 0 came in the way
+// then we'll return 0 .
