@@ -1,71 +1,136 @@
-import os
 import requests
-import json
+import os
 
-# ✅ STEP 1: Configure your LeetCode username, problem name, and GitHub repo
-USERNAME = "your_leetcode_username"  # Change this to your LeetCode username
-PROBLEM_NAME = "Two Sum"  # Change this to the specific problem you want to push
-FILE_EXTENSION = ".cpp"  # Change based on your language (".py" for Python, ".java" for Java)
-leetcode_folder = "LeetCode-Solutions"  # Your local solutions folder
+def fetch_leetcode_submission(problem_slug, session_cookie, csrf_token, username, output_folder="leetcode_solutions"):
+    # Create output folder if it doesn't exist
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
-# ✅ STEP 2: Fetch solved problems using LeetCode API
-api_url = "https://leetcode.com/graphql"
-headers = {"Content-Type": "application/json"}
-query = {
-    "operationName": "getUserProfileQuestions",
-    "query": '''
-    query getUserProfileQuestions($username: String!) {
-        matchedUser(username: $username) {
-            submitStats {
-                acSubmissionNum {
-                    difficulty
-                    count
-                    submissions
-                }
-            }
-            problemsSolvedBeatsStats {
-                difficulty
-                percentage
-            }
+    # Common headers
+    headers = {
+        "Cookie": f"LEETCODE_SESSION={session_cookie}; csrftoken={csrf_token}",
+        "x-csrftoken": csrf_token,
+        "Referer": "https://leetcode.com/",
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+    }
+
+    # Step 1: Get recent submissions to find submission ID
+    list_query = """
+    query recentSubmissionList($username: String!, $limit: Int!) {
+        recentSubmissionList(username: $username, limit: $limit) {
+            id
+            title
+            titleSlug
+            lang
+            statusDisplay
         }
     }
-    ''',
-    "variables": {"username": USERNAME}
-}
+    """
+    
+    list_payload = {
+        "query": list_query,
+        "variables": {"username": username, "limit": 20},
+        "operationName": "recentSubmissionList"
+    }
 
-response = requests.post(api_url, headers=headers, data=json.dumps(query))
+    try:
+        print(f"Fetching submission list for {problem_slug}")
+        list_response = requests.post("https://leetcode.com/graphql", headers=headers, json=list_payload)
+        list_response.raise_for_status()
+        
+        # Debug: Print raw response
+        response_data = list_response.json()
+        print("Raw response:", response_data)
+        
+        # Check if data exists
+        if "data" not in response_data or "recentSubmissionList" not in response_data["data"]:
+            print("Error: Unexpected response structure")
+            return
+        
+        submissions = response_data["data"]["recentSubmissionList"]
+        if submissions is None:
+            print("Error: No submissions found. Check username or authentication")
+            return
+        
+        # Find accepted submission
+        submission_id = None
+        lang = None
+        problem_title = None
+        for sub in submissions:
+            if sub["titleSlug"] == problem_slug and sub["statusDisplay"] == "Accepted":
+                submission_id = sub["id"]
+                lang = sub["lang"]
+                problem_title = sub["title"]
+                break
+        
+        if not submission_id:
+            print(f"No accepted submission found for {problem_slug} in recent submissions")
+            return
 
-if response.status_code != 200:
-    print("❌ Error: Could not fetch LeetCode profile. Check the username!")
-    exit()
+        # Step 2: Get submission details with code
+        details_query = """
+        query submissionDetails($submissionId: Int!) {
+            submissionDetails(submissionId: $submissionId) {
+                code
+                lang {
+                    name
+                }
+            }
+        }
+        """
+        
+        details_payload = {
+            "query": details_query,
+            "variables": {"submissionId": int(submission_id)},
+            "operationName": "submissionDetails"
+        }
+        
+        print(f"Fetching submission details for ID: {submission_id}")
+        details_response = requests.post("https://leetcode.com/graphql", headers=headers, json=details_payload)
+        details_response.raise_for_status()
+        
+        details = details_response.json()["data"]["submissionDetails"]
+        code = details["code"]
+        
+        # Map language to extension
+        ext_map = {
+            "python": ".py",
+            "python3": ".py",
+            "cpp": ".cpp",
+            "java": ".java",
+            "javascript": ".js"
+        }
+        ext = ext_map.get(lang, ".txt")
+        
+        filename = f"{problem_title.replace(' ', '_')}{ext}"
+        filepath = os.path.join(output_folder, filename)
+        
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(code)
+            
+        print(f"Solution saved to {filepath}")
+        
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        if hasattr(e.response, 'text'):
+            print("Response:", e.response.text[:500])
+    except (KeyError, TypeError) as e:
+        print(f"Data processing error: {e}")
 
-data = response.json()
+def main():
+    # Replace these with your actual values
+    SESSION_COOKIE = "your_leetcode_session_cookie"
+    CSRF_TOKEN = "your_csrf_token"
+    USERNAME = "your_leetcode_username"
+    PROBLEM_SLUG = "binary-tree-inorder-traversal"
+    
+    fetch_leetcode_submission(
+        problem_slug=PROBLEM_SLUG,
+        session_cookie=SESSION_COOKIE,
+        csrf_token=CSRF_TOKEN,
+        username=USERNAME
+    )
 
-# Extract solved problem count
-if "data" in data and "matchedUser" in data["data"]:
-    print(f"✅ Found LeetCode profile for {USERNAME}.")
-else:
-    print(f"❌ Error: Username '{USERNAME}' not found on LeetCode!")
-    exit()
-
-# ✅ STEP 3: Check if the solution file exists locally
-file_name = PROBLEM_NAME.replace(" ", "_") + FILE_EXTENSION
-file_path = os.path.join(leetcode_folder, file_name)
-
-if not os.path.exists(leetcode_folder):
-    print(f"❌ Error: Folder '{leetcode_folder}' does not exist!")
-    exit()
-
-if os.path.exists(file_path):
-    print(f"✅ Found {file_name}, pushing to GitHub...")
-
-    # Change to the directory
-    #os.chdir(leetcode_folder)
-    # ✅ STEP 4: Push to GitHub using Git commands
-    os.system(f"git add .")
-    os.system(f'git commit -m "Added solution for {PROBLEM_NAME}"')
-    os.system("git push origin main")
-
-    print("🚀 Successfully pushed to GitHub!")
-else:
-    print(f"❌ Error: {file_name} not found in {leetcode_folder}. Check the file name!")
+if __name__ == "__main__":
+    main()
