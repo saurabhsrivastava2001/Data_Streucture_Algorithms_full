@@ -12,7 +12,7 @@ vector<int> NGL(int arr[],int n){
         }
         else if (s.size()>0 && s.top()>arr[i]){
             v.push_back(s.top());
-        }
+        } 
         else if (s.size()>0 && s.top()<arr[i]){
             while(s.size()==0 && s.top()>arr[i]){
                 s.pop();
