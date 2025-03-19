@@ -29,18 +29,10 @@ node * build_tree(node * root){
 
 }
 
-void print_inorder(node* root) {
-    if (root == NULL) {
-        return;
-    }
-    
-    cout << root->data << " ";  // Print root node
-    print_inorder(root->left);         // Recursively print left subtree
-    print_inorder(root->right);        // Recursively print right subtree
-}
+
+
 
 int main(){
     node * root=NULL;
     root=build_tree(root);
-    print_inorder(root);
 }
