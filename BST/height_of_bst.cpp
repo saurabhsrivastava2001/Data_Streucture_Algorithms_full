@@ -24,7 +24,7 @@ node * build_tree(node * root){
     cout<<"enter the data for left of " <<data<<endl;
     root->left=build_tree(root->left);
     cout<<"enter the data for right of " <<data<<endl;
-    root->right=build_tree(root->right);
+    root->right = build_tree(root->right);
     return root;
 
 }
@@ -39,8 +39,21 @@ void print_inorder(node* root) {
     print_inorder(root->right);        // Recursively print right subtree
 }
 
+int hight(node * root){
+    if (root==NULL){
+        return 0;
+    }
+    int lh,rh;
+    lh=hight(root->left);
+    rh=hight(root->right);
+    
+    return max(lh,rh)+1;
+}
+
+
 int main(){
     node * root=NULL;
     root=build_tree(root);
-    print_inorder(root);
+
+    cout<<"hight of the bst is "<<hight(root);
 }
