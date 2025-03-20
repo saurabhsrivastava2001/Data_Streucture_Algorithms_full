@@ -15,21 +15,21 @@ class node{
         this->right=NULL;
        } 
 };
-node * build_tree(node * root){
-    cout<<"Enter the data : "<<endl;
+node* build_tree() {
+    cout << "Enter the data: ";
     int data;
-    cin>>data;
-    if (data==-1){
+    cin >> data;
+    if (data == -1) {
         return NULL;
     }
-    root=new node (data);
-    cout<<"enter the data for left of " <<data<<endl;
-    root->left=build_tree(root->left);
-    cout<<"enter the data for right of " <<data<<endl;
-    root->right=build_tree(root->right);
+    node* root = new node(data);
+    cout << "Enter the data for left of " << data << endl;
+    root->left = build_tree();
+    cout << "Enter the data for right of " << data << endl;
+    root->right = build_tree();
     return root;
-
 }
+
 vector<vector<int>> level_order(node * root){
     vector<vector <int >> ans;
     queue <node *> q;
@@ -64,7 +64,7 @@ void print(vector <vector<int>> v){
 int main(){
     node * root=NULL;
     //1 2 -1 3 -1 -1 4 5 -1 6 -1 -1 -1 
-    root=build_tree(root);
+    root=build_tree();
     vector<vector<int>> v =level_order(root);
     print(v);
 }
