@@ -57,6 +57,8 @@ int check_balance(node * root ){
     if ( abs(lh-rh)>1)return -1; 
     return max(lh,rh)+1;
 }
+//[1 2 2 3 -1 -1 3 4 -1 -1 4]
+
 
 int main() {
     node* root = NULL;
