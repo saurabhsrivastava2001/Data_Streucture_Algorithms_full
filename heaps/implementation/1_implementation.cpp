@@ -1,4 +1,3 @@
-
 #include <iostream>
 using namespace std;
 
@@ -10,8 +9,6 @@ public:
     Heap() {
         size = 0;
     }
-    
-    
     void insert(int a) {
         if (size >= 100) {
             cout << "Heap overflow" << endl;
@@ -40,8 +37,6 @@ public:
         cout << endl;
     }
 };
-
-
 
 
 int main(){
