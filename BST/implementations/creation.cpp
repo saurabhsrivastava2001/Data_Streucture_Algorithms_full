@@ -15,6 +15,7 @@ class node{
         this->right=NULL;
        } 
 };
+//this is the  building the tree
 node* build_tree() {
     cout << "Enter the data: ";
     int data;
