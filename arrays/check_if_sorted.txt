@@ -1,0 +1,16 @@
+class Solution {
+public:
+    bool check(vector<int>& nums) {
+        // catch -- check for the pivot point also;
+        int count = 0;
+        int n = nums.size();
+        
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > nums[(i + 1) % n]) {  // notice (i+1)%n for circular check
+                count++;
+            }
+        }
+        
+        return count <= 1;
+    }
+};

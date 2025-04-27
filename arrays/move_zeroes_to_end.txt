@@ -1,0 +1,33 @@
+arr= [12,3,0,2,0,4,0,44,5,0,3]
+o/p= [12,3,2,4,44,5,3,0,0,0,0]
+
+//run a for loop to find the first zero then break;
+// take i =j+1(next ele of the j )
+-----run  i from  i to n-1
+        if(arr[i]!=0)//non neg then do a swap with arr[j]// the zero    and j++
+//time -- O(n)
+// space =-- O(1)
+
+
+// step -1-
+
+int j=-1;
+for(i =0 to i< n){
+    if (arr[i]==0){
+        j=i;
+        break;
+    }
+}
+// just a check --
+if no zeroes found then 
+if (j==-1){
+    rerturn ;
+}
+// step -2-
+
+for (i=j+1;i<n;i++){
+    if (arr[i]!=0){
+        swap(arr[j],arr[i]);
+        j++;
+    }
+}
