@@ -1,6 +1,7 @@
-#include <iostream>
 #include <vector>
 #include <queue>
+#include <iostream>
+
 using namespace std;
 
 class node{
@@ -13,7 +14,7 @@ class node{
         this-> data=d;
         this->left=NULL;
         this->right=NULL;
-       } 
+       }
 };
 //this is the  building the tree
 node* build_tree() {
@@ -30,7 +31,6 @@ node* build_tree() {
     root->right = build_tree();
     return root;
 }
-
 
 vector<vector<int>> level_order(node * root){
     vector<vector <int >> ans;
