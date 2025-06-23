@@ -1,0 +1,32 @@
+#include <iostream>
+using namespace std;
+
+// Function to maintain the max-heap property
+void heapifyDown(int arr[], int n, int i) {
+    int largest = i; 
+    int left = 2*i + 1; 
+    int right = 2*i + 2;
+
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapifyDown(arr, n, largest);
+    }
+}
+
+// Delete root from max-heap
+int deleteMax(int arr[], int& n) {
+    if (n <= 0) return -1;
+
+    int root = arr[0];            // save max
+    arr[0] = arr[n - 1];          // move last to root
+    n--;                          // reduce heap size
+    heapifyDown(arr, n, 0);       // restore heap
+
+    return root;
+}
