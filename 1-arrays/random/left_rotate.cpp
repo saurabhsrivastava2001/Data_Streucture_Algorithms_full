@@ -1,5 +1,6 @@
-class Solution {
-    public:
+#include<iostream>
+#include <vector>
+using namespace std;
         void rotateArray(vector<int>& nums, int k) {
             if (nums.size() ==1 || k==0){
                 return ;
@@ -18,4 +19,4 @@ class Solution {
                 }
             }
         }
-    };
+   
