@@ -61,36 +61,29 @@ Node * build_tree(){
     root->right=build_tree();
     return root;
 }
-
-
-// Function to print the left boundary (excluding leaf nodes)
 void addLeftBoundary(Node* root, vector<int>& res) {
     Node* curr = root->left;   // taking a  pointer to traverse 
-    while (curr) {
+    while (curr) { 
         if (curr->left || curr->right) res.push_back(curr->val);// not a leaf Node  
         if (curr->left) curr = curr->left; // move left left left
         else curr = curr->right; // if  not left then right 
     }
 }
-
-// Function to print leaf nodes (Inorder Traversal)
 void addleaves(Node* root, vector<int>& res) {
-    if (!root->left && ! root->right) res.push_back(root->val);
-    if(root->left) addleaves(root->left,res); 
-    if(root->right) addleaves(root->right,res); 
+    if (!root->left && ! root->right) res.push_back(root->val); // only check we need to do is that is the node is leaf
+    if(root->left) addleaves(root->left,res); // go in left depth find leaf
+    if(root->right) addleaves(root->right,res); // go in the right depth find leaf node
 }
-
-// Function to print the right boundary (excluding leaf nodes, in reverse)
 void addRightBoundary(Node* root, vector<int>& res) {
-    vector<int> temp;
-    Node* curr = root->right;
+    vector<int> temp;    // we need a data structure to store the values because we need to do the right in the reverse order
+    Node* curr = root->right; // reverse
     while (curr) {
-        if (curr->left || curr->right) temp.push_back(curr->val);
-        if (curr->right) curr = curr->right;
-        else curr = curr->left;
+        if (curr->left || curr->right) temp.push_back(curr->val); // if its not leafnode push it 
+        if (curr->right) curr = curr->right; // go right right right 
+        else curr = curr->left; // if not right then go left
     }
-    reverse(temp.begin(), temp.end());
-    res.insert(res.end(), temp.begin(), temp.end());
+    reverse(temp.begin(), temp.end()); // revrse it and the push it to the ans
+    res.insert(res.end(), temp.begin(), temp.end()); // pushing it on the ans
 }
 
 // Function to perform boundary traversal
@@ -99,12 +92,12 @@ vector<int> boundaryTraversal(Node* root) {
     if (!root) return res;
 
     res.push_back(root->val);  // Start with root
-    if (root->left || root->right) {
-        addLeftBoundary(root, res);
-        addleaves(root, res);
-        addRightBoundary(root, res);
+    if (root->left || root->right) { // if it has nodes
+        addLeftBoundary(root, res); // add the left boundary first 
+        addleaves(root, res); // add the leaf nodes 
+        addRightBoundary(root, res); // add the right boundary
     }
-    return res;
+    return res; 
 }
 
 void printlevelorder(Node * &root){
@@ -124,9 +117,9 @@ void printlevelorder(Node * &root){
 }
 int main(){
     Node * root= build_tree();
-    // vector<int > ans= boundaryTraversal( root);
-    // cout << "Boundary Traversal: ";
-    // for (int val : ans) cout << val << " ";
+    vector<int > ans= boundaryTraversal( root);
+    cout << "Boundary Traversal: ";
+    for (int val : ans) cout << val << " ";
     printlevelorder(root);
     cout << endl;
 

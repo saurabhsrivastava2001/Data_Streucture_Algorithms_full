@@ -1,7 +1,6 @@
 #include <iostream>
 #include <algorithm> // Needed for std::max
 using namespace std;
-
 class node {
 public:
     int data;
@@ -14,7 +13,6 @@ public:
         this->right = NULL;
     }
 };
-
 // Corrected build_tree function
 node* build_tree() {
     cout << "Enter the data: ";
@@ -30,22 +28,16 @@ node* build_tree() {
     root->right = build_tree();
     return root;
 }
-
 // Function to compute the diameter of the binary tree
-int max_path(node* root, int &maxi) {
+int max_path(node* root, int &maxi) { 
     if (root == NULL) {
-        return 0;
-    }
-
+        return 0;}
     int lh = max_path(root->left, maxi);
     int rh = max_path(root->right, maxi);
-
     // Correct max function usage
-    maxi = std::max(maxi, 1 + lh + rh);
-
+    maxi = std::max(maxi, 1 + lh + rh);  // in the code of the height we just have to update the one line that we have to cary themaxi var as the global or an parameter , and the maxi will be 1+ max(lh and rh);
     return 1 + std::max(lh, rh);
 }
-
 int main() {
     node* root = NULL;
     root = build_tree(); // Corrected function call
