@@ -36,16 +36,16 @@ vector<int> top_view(Node * root){
     q.push({root,0}); // pushing the root at 0 index 
     // if we go left then we will store that at curr_axis -1 and if go right then store it at the +1 axis
     while(!q.empty()){
-        Node * node = q.front().first;
-        int axis= q.front().second;
-        q.pop();
-
-        if (mp.find(axis)==mp.end()) mp[axis]=node ->data;
-        if (node ->left != NULL)q.push({node->left,axis-1});
-        if (node ->right != NULL)q.push({node->right,axis+1});
-    }
+        Node * node = q.front().first; // take the element out of the tree 
+        int axis= q.front().second; // take the axis also (need to make the others -1 and +1)
+        q.pop(); // remove the element as we do in level order
+        // note that we need to store only one element in the axis (only top view) so if we have element in the resp. axis then we will not exter data in the axis  
+        if (mp.find(axis)==mp.end()) mp[axis]=node ->data; // not found then enter 
+        if (node ->left != NULL)q.push({node->left,axis-1}); // add the left node in the queue and also make the axis of that as the curr_axis -1; 
+        if (node ->right != NULL)q.push({node->right,axis+1});// same curr_axis +1 
+}
     for (auto it : mp){
-        ans.push_back(it.second);
+        ans.push_back(it.second); // map has already the values in the sorted order so we just have to add the values in our ans arr ( mp.second ( the value in the axis)) 
     }
     return ans;
 }
