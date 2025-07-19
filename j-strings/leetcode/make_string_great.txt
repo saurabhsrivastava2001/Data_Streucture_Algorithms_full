@@ -1,0 +1,28 @@
+we have to remove the char is eE or aA like wise 
+so we make a stack and if the current element id 32 less or great( mean one is cap)
+another is small then remve the top ( both collide)
+
+class Solution {
+public:
+
+    // if there are continuos two same alpha but diff case then remove
+    string makeGood(string s) {
+        stack<char> st;
+        for (char c : s) {
+            if (!st.empty() && abs(st.top() - c) == 32) {
+                st.pop(); // same letter, different case
+            } else {
+                st.push(c);
+            }
+        }
+
+        string ans = "";
+        while (!st.empty()) {
+            ans += st.top();
+            st.pop();
+        }
+
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};

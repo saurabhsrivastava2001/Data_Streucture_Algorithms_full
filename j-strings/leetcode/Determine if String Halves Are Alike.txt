@@ -1,0 +1,28 @@
+if both halves have the same number fo the vowels then true 
+
+count the vowels 
+-- i have done add one's and reduce other's if 0 means same added same removed 
+
+
+class Solution {
+public:
+    bool isvowel(char c){
+        if( abs(c)== 69 ||abs(c)== 73 ||abs(c)== 79 || abs(c)== 65 || abs(c)== 85 || abs(c)== 97 || abs(c)== 101 ||abs(c)== 105 || abs(c)==111 ||abs(c)==117 )return true;
+        else return false;
+    }
+    bool halvesAreAlike(string s) {
+        int count =0;
+        int n=s.length();
+        for(int i=0;i<n;i++){
+            if (i<n/2){
+                if (isvowel(s[i])) count++;
+            }
+            else{
+                if (isvowel(s[i])) count--;
+            }
+        }
+        cout<<count;
+        if (count ==0)return true;
+        else return false;
+    }
+};
