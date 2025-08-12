@@ -7,11 +7,11 @@
 #include <cstring> 
 using namespace std;
 
-
 bool rec(vector<int> arr,int n, int sum){/* n is size of the array*/
     //high value to the lower value -- n-1 to 0 and sum to 0
-    if (sum==0)return true; 
-    else if (arr[n-1]==0)return false ;
+    if (sum==0)return true;
+    else if (arr[n-1]==0)return false ;// if the last element is 0 then we can't make the sum  because we are not considering the empty set
+    else if (n==0)return false; // if no elements are left then we can't make the sum
     // choice 
     if (arr[n-1]<=sum){ // can take or not take 
         //return the or of take and not take ( if anyway we are getting true then true)
@@ -49,7 +49,7 @@ int memo(vector<int> arr, int n, int sum){// same as recursion but store the pre
 int tab(vector<int> arr,int n, int sum){
     int dp[n+1][sum+1]={};
 
-     // Initialize base case: sum 0 is always possible
+    // Initialize base case: sum 0 is always possible
     for (int i = 0; i <= n; i++) {
         dp[i][0] = 1;  // true (int 1)
     }
@@ -66,8 +66,6 @@ int tab(vector<int> arr,int n, int sum){
     }
     return dp[n][sum];
 }
-
-
 
 
 int main() {
